@@ -1,0 +1,1307 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101a20">
+<title>Yogya Daily Assistant V2</title>
+
+<style>
+:root {
+  --bg:#101a20;
+  --panel:#19262d;
+  --panel2:#202f36;
+  --green:#55c995;
+  --green2:#287c5b;
+  --text:#edf5f0;
+  --muted:#8da19a;
+  --border:rgba(255,255,255,.075);
+  --red:#f07979;
+  --yellow:#e8bb69;
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(ellipse at 80% 0%,rgba(47,125,91,.13),transparent 35%),
+    radial-gradient(ellipse at 0% 100%,rgba(40,85,100,.10),transparent 40%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+button,input,textarea,select {font:inherit}
+
+button {cursor:pointer}
+
+.app {
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width:245px;
+  background:rgba(19,31,37,.95);
+  border-right:1px solid var(--border);
+  padding:25px 17px;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+
+.brand {
+  padding:5px 10px 30px;
+}
+
+.brand-name {
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+
+.brand-name span {color:var(--green)}
+
+.brand small {
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+  margin-top:6px;
+  letter-spacing:1px;
+}
+
+.menu-label {
+  color:#60746d;
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:1.5px;
+  padding:12px 10px;
+}
+
+.nav {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:13px 12px;
+  margin-bottom:5px;
+  border-radius:9px;
+  background:transparent;
+  border:0;
+  color:var(--muted);
+  text-align:left;
+  font-size:13px;
+  transition:.2s;
+}
+
+.nav:hover,.nav.active {
+  background:rgba(85,201,149,.12);
+  color:var(--green);
+}
+
+.nav .ico {width:20px;text-align:center}
+
+.sidebar-bottom {
+  margin-top:auto;
+  padding:13px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:11px;
+}
+
+.sidebar-bottom strong {font-size:12px}
+.sidebar-bottom p {font-size:10px;color:var(--muted)}
+
+/* MAIN */
+
+.main {
+  flex:1;
+  min-width:0;
+}
+
+.topbar {
+  height:78px;
+  padding:0 35px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(16,26,32,.78);
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(16px);
+}
+
+.page-title {font-size:16px;font-weight:bold}
+.page-subtitle {font-size:11px;color:var(--muted);margin-top:5px}
+
+.top-right {
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.clock {text-align:right}
+.clock strong {font-size:21px;letter-spacing:1px}
+.clock small {display:block;color:var(--muted);font-size:10px}
+
+.notification-btn {
+  background:var(--panel2);
+  color:var(--green);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:11px 13px;
+}
+
+.content {
+  padding:30px 35px;
+  max-width:1500px;
+  margin:auto;
+}
+
+/* HERO */
+
+.hero {
+  background:
+    linear-gradient(110deg,rgba(37,100,73,.94),rgba(25,65,56,.88)),
+    var(--panel);
+  border:1px solid rgba(113,218,160,.15);
+  border-radius:16px;
+  padding:27px 30px;
+  margin-bottom:22px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero:after {
+  content:"";
+  position:absolute;
+  width:260px;height:260px;
+  right:-70px;top:-140px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:50%;
+  box-shadow:0 0 0 35px rgba(255,255,255,.025),
+             0 0 0 70px rgba(255,255,255,.02);
+}
+
+.hero h2 {font-size:24px;margin:0 0 9px}
+.hero p {font-size:12px;color:#c7e2d1;margin:0}
+
+/* CARDS */
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:15px;
+  margin-bottom:22px;
+}
+
+.card {
+  background:rgba(25,38,45,.93);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:19px;
+  min-width:0;
+}
+
+.stat-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.stat-icon {
+  width:36px;height:36px;
+  background:rgba(85,201,149,.12);
+  color:var(--green);
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  font-size:17px;
+}
+
+.stat-number {
+  font-size:29px;
+  font-weight:750;
+  margin-top:14px;
+}
+
+.stat-label {font-size:11px;color:var(--muted)}
+
+.stat-footer {font-size:10px;color:var(--muted);margin-top:6px}
+
+.section {
+  margin-bottom:19px;
+}
+
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+  gap:10px;
+}
+
+.section-heading h3 {font-size:14px;margin:0}
+.section-heading small {color:var(--muted);font-size:10px}
+
+/* GRID */
+
+.dashboard-grid {
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:18px;
+}
+
+.full {grid-column:1/-1}
+
+.panel-title {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+  gap:10px;
+}
+
+.panel-title h3 {font-size:14px;margin:0}
+.panel-title span {font-size:10px;color:var(--muted)}
+
+/* PRAYER */
+
+.prayer-next {
+  padding:16px;
+  border-radius:10px;
+  background:rgba(85,201,149,.09);
+  border:1px solid rgba(85,201,149,.13);
+  margin-bottom:15px;
+}
+
+.prayer-next small {color:#a8c7b5;font-size:10px}
+.prayer-next strong {display:block;font-size:19px;margin:6px 0;color:var(--green)}
+.prayer-next p {font-size:10px;color:var(--muted);margin:0}
+
+.prayer-grid {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+
+.prayer-item {
+  background:var(--panel2);
+  border:1px solid var(--border);
+  padding:12px 5px;
+  border-radius:9px;
+  text-align:center;
+}
+
+.prayer-item span {font-size:10px;color:var(--muted)}
+.prayer-item strong {display:block;margin-top:7px;font-size:13px}
+
+.prayer-item.next {
+  border-color:var(--green);
+  background:rgba(85,201,149,.10);
+}
+
+.hint {font-size:10px;color:var(--muted);margin-top:13px;line-height:1.6}
+
+/* FORMS */
+
+label {
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin:8px 0 5px;
+}
+
+input,textarea,select {
+  width:100%;
+  background:#111e24;
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:8px;
+  padding:11px;
+  font-size:12px;
+  outline:none;
+}
+
+input:focus,textarea:focus,select:focus {
+  border-color:var(--green);
+}
+
+input::placeholder,textarea::placeholder {color:#65776f}
+textarea {min-height:75px;resize:vertical}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.btn {
+  background:var(--green2);
+  color:white;
+  border:0;
+  border-radius:8px;
+  padding:11px 15px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.btn:hover {background:#32966a}
+
+.btn-secondary {
+  background:var(--panel2);
+  color:var(--green);
+  border:1px solid var(--border);
+}
+
+.btn-danger {background:rgba(240,121,121,.12);color:var(--red)}
+.btn-small {padding:7px 9px;font-size:10px}
+
+/* ITEMS */
+
+.item {
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.item:last-child {border-bottom:0}
+
+.item-info {min-width:0}
+.item-info strong {font-size:12px;overflow-wrap:anywhere}
+.item-info p {font-size:10px;color:var(--muted);margin:6px 0;line-height:1.5;overflow-wrap:anywhere}
+
+.item-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  flex-shrink:0;
+}
+
+.tag {
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:20px;
+  font-size:9px;
+  background:rgba(85,201,149,.12);
+  color:var(--green);
+}
+
+.tag.late {background:rgba(240,121,121,.13);color:var(--red)}
+.tag.done {background:rgba(85,201,149,.10);color:var(--green)}
+.completed {opacity:.5}
+.completed strong {text-decoration:line-through}
+
+.empty {
+  text-align:center;
+  padding:22px 10px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.progress {
+  background:#304039;
+  height:6px;
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.progress div {
+  height:100%;
+  background:var(--green);
+  transition:.3s;
+}
+
+.hidden {display:none!important}
+
+footer {
+  border-top:1px solid var(--border);
+  padding:20px;
+  text-align:center;
+  color:#63776e;
+  font-size:10px;
+}
+
+/* MOBILE NAV */
+
+.mobile-nav {display:none}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px) {
+  .sidebar {width:210px}
+  .content {padding:25px 20px}
+  .topbar {padding:0 20px}
+  .stats {grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:720px) {
+  .sidebar {display:none}
+  .topbar {
+    height:68px;
+    padding:0 15px;
+  }
+  .content {padding:17px 13px 90px}
+  .clock strong {font-size:17px}
+  .clock small {font-size:9px}
+  .page-title {font-size:14px}
+  .page-subtitle {font-size:9px}
+  .top-right {gap:8px}
+  .notification-btn {padding:9px}
+  .hero {padding:22px 19px}
+  .hero h2 {font-size:20px}
+  .dashboard-grid {grid-template-columns:1fr}
+  .full {grid-column:auto}
+  .stats {gap:9px}
+  .card {padding:15px}
+  .stat-number {font-size:24px}
+  .prayer-grid {grid-template-columns:repeat(3,1fr)}
+  .mobile-nav {
+    display:flex;
+    position:fixed;
+    z-index:20;
+    bottom:0;left:0;right:0;
+    height:67px;
+    background:#17252b;
+    border-top:1px solid var(--border);
+    justify-content:space-around;
+    align-items:center;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .mobile-nav button {
+    background:transparent;
+    color:var(--muted);
+    border:0;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    align-items:center;
+    font-size:9px;
+    padding:7px;
+  }
+  .mobile-nav button.active {color:var(--green)}
+  .mobile-nav b {font-size:18px}
+}
+
+@media(max-width:380px) {
+  .stats {grid-template-columns:1fr 1fr}
+  .form-grid {grid-template-columns:1fr}
+  .prayer-grid {grid-template-columns:repeat(2,1fr)}
+  .item {flex-direction:column}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR DESKTOP -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-name">YOGYA<span>.</span> DAILY</div>
+    <small>PERSONAL PRODUCTIVITY SYSTEM © Kevinn</small>
+  </div>
+
+  <div class="menu-label">MENU UTAMA</div>
+
+  <button class="nav active" data-page="dashboard">
+    <span class="ico">◫</span> Dashboard
+  </button>
+  <button class="nav" data-page="tasks">
+    <span class="ico">☑</span> Daily Task
+  </button>
+  <button class="nav" data-page="promos">
+    <span class="ico">◈</span> Promo Reminder
+  </button>
+  <button class="nav" data-page="notes">
+    <span class="ico">▤</span> Quick Notes
+  </button>
+
+  <div class="menu-label">LAINNYA</div>
+  <button class="nav" data-page="prayer">
+    <span class="ico">☾</span> Prayer Schedule
+  </button>
+
+  <div class="sidebar-bottom">
+    <strong>Yogya Ciranjang</strong>
+    <p>Stay focused. Complete every task.</p>
+    <span class="tag">VERSION 2.0</span>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div>
+    <div class="page-title" id="pageTitle">Dashboard Overview</div>
+    <div class="page-subtitle" id="dateText">Memuat tanggal...</div>
+  </div>
+
+  <div class="top-right">
+    <div class="clock">
+      <strong id="clock">00:00:00</strong>
+      <small>LOCAL TIME • WIB</small>
+    </div>
+    <button class="notification-btn" onclick="enableNotifications()" title="Aktifkan notifikasi">♧</button>
+  </div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<section id="page-dashboard" class="page">
+
+  <div class="hero">
+    <h2>Good Day, Customer Service.</h2>
+    <p>Kelola aktivitas, pantau pekerjaan, dan pastikan semua agenda berjalan sesuai rencana.</p>
+  </div>
+
+  <div class="stats">
+    <div class="card">
+      <div class="stat-top">
+        <span class="stat-label">TOTAL TASK</span>
+        <span class="stat-icon">☑</span>
+      </div>
+      <div class="stat-number" id="totalTask">0</div>
+      <div class="stat-footer">Seluruh pekerjaan aktif</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-top">
+        <span class="stat-label">COMPLETED</span>
+        <span class="stat-icon">✓</span>
+      </div>
+      <div class="stat-number" id="doneTask">0</div>
+      <div class="stat-footer">Pekerjaan telah selesai</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-top">
+        <span class="stat-label">PENDING</span>
+        <span class="stat-icon">◷</span>
+      </div>
+      <div class="stat-number" id="pendingTask">0</div>
+      <div class="stat-footer">Menunggu penyelesaian</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-top">
+        <span class="stat-label">OVERDUE</span>
+        <span class="stat-icon">!</span>
+      </div>
+      <div class="stat-number" id="lateTask">0</div>
+      <div class="stat-footer">Melewati deadline</div>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <section class="card">
+      <div class="panel-title">
+        <h3>🕌 Prayer Schedule</h3>
+        <span>Ciranjang, Cianjur</span>
+      </div>
+      <div class="prayer-next" id="nextPrayer">
+        <small>WAKTU SALAT BERIKUTNYA</small>
+        <strong>Memuat jadwal...</strong>
+        <p>Jadwal waktu salat hari ini</p>
+      </div>
+      <div class="prayer-grid" id="prayerList"></div>
+      <div class="hint">Metode perhitungan Kemenag RI. Cocokkan kembali dengan jadwal masjid setempat.</div>
+    </section>
+
+    <section class="card">
+      <div class="panel-title">
+        <h3>📊 Daily Progress</h3>
+        <span>Hari ini</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px">
+        <span class="muted">Penyelesaian tugas</span>
+        <strong id="progressPercent">0%</strong>
+      </div>
+      <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+      <div style="height:20px"></div>
+      <div class="panel-title"><h3>⏳ Pending Tasks</h3></div>
+      <div id="dashboardPending"></div>
+    </section>
+
+    <section class="card">
+      <div class="panel-title">
+        <h3>📋 Today's Agenda</h3>
+        <button class="btn btn-small" onclick="showPage('tasks')">Lihat Semua</button>
+      </div>
+      <div id="dashboardAgenda"></div>
+    </section>
+
+    <section class="card">
+      <div class="panel-title">
+        <h3>📢 Upcoming Promotions</h3>
+        <button class="btn btn-small" onclick="showPage('promos')">Kelola</button>
+      </div>
+      <div id="dashboardPromo"></div>
+    </section>
+
+  </div>
+</section>
+
+<!-- TASKS -->
+<section id="page-tasks" class="page hidden">
+  <div class="section-heading">
+    <div>
+      <h3>Daily Task Management</h3>
+      <small>Kelola dan pantau seluruh pekerjaan</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="panel-title"><h3>+ Tambahkan Pekerjaan</h3></div>
+    <form id="taskForm">
+      <label>Nama pekerjaan</label>
+      <input id="taskName" placeholder="Contoh: Evaluasi sales supermarket" required>
+
+      <div class="form-grid">
+        <div>
+          <label>Tanggal pengerjaan</label>
+          <input type="date" id="taskDate" required>
+        </div>
+        <div>
+          <label>Deadline</label>
+          <input type="time" id="taskTime" required>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div>
+          <label>Prioritas</label>
+          <select id="taskPriority">
+            <option>Tinggi</option>
+            <option selected>Sedang</option>
+            <option>Rendah</option>
+          </select>
+        </div>
+        <div>
+          <label>PIC</label>
+          <input id="taskPIC" placeholder="Nama penanggung jawab">
+        </div>
+      </div>
+
+      <label>Keterangan</label>
+      <textarea id="taskDesc" placeholder="Detail pekerjaan..."></textarea>
+      <button class="btn" type="submit">Simpan Pekerjaan</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="panel-title">
+      <h3>All Tasks</h3>
+      <span id="taskCount">0 pekerjaan</span>
+    </div>
+    <div id="taskList"></div>
+  </div>
+
+  <div class="card">
+    <div class="panel-title"><h3>⏳ Carry Over / Belum Selesai</h3></div>
+    <div id="pendingList"></div>
+  </div>
+</section>
+
+<!-- PROMO -->
+<section id="page-promos" class="page hidden">
+  <div class="section-heading">
+    <div>
+      <h3>Promotion Reminder</h3>
+      <small>Jadwal promosi, event, dan aktivitas toko</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="panel-title"><h3>+ Tambahkan Jadwal Promo</h3></div>
+    <form id="promoForm">
+      <label>Nama kegiatan / promosi</label>
+      <input id="promoName" placeholder="Contoh: Promo Weekend Fresh" required>
+
+      <div class="form-grid">
+        <div>
+          <label>Tanggal</label>
+          <input type="date" id="promoDate" required>
+        </div>
+        <div>
+          <label>Jam pengingat</label>
+          <input type="time" id="promoTime" required>
+        </div>
+      </div>
+
+      <label>Detail kegiatan</label>
+      <textarea id="promoDesc" placeholder="Detail promo, persiapan, produk, dan lainnya..."></textarea>
+      <button class="btn" type="submit">Simpan Jadwal</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="panel-title"><h3>Promotion Schedule</h3></div>
+    <div id="promoList"></div>
+  </div>
+</section>
+
+<!-- NOTES -->
+<section id="page-notes" class="page hidden">
+  <div class="section-heading">
+    <div>
+      <h3>Quick Notes</h3>
+      <small>Simpan informasi penting kapan saja</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="panel-title"><h3>+ Buat Catatan Baru</h3></div>
+    <form id="noteForm">
+      <label>Judul catatan</label>
+      <input id="noteTitle" placeholder="Contoh: Hasil briefing pagi" required>
+      <label>Isi catatan</label>
+      <textarea id="noteContent" placeholder="Tuliskan catatan..." required></textarea>
+      <button class="btn" type="submit">Simpan Catatan</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="panel-title"><h3>My Notes</h3></div>
+    <div id="noteList"></div>
+  </div>
+</section>
+
+<!-- PRAYER -->
+<section id="page-prayer" class="page hidden">
+  <div class="section-heading">
+    <div>
+      <h3>Prayer Schedule</h3>
+      <small>Jadwal salat Ciranjang, Cianjur, Jawa Barat</small>
+    </div>
+    <button class="btn btn-small" onclick="loadPrayer()">Refresh</button>
+  </div>
+
+  <div class="card">
+    <div class="panel-title">
+      <h3>🕌 Jadwal Adzan Hari Ini</h3>
+      <span>WIB / UTC+7</span>
+    </div>
+    <div id="prayerDetail" class="prayer-grid"></div>
+    <div class="hint" id="prayerInfo">Mengambil data jadwal...</div>
+    <button class="btn btn-secondary" onclick="enableNotifications()">Aktifkan Notifikasi</button>
+    <button class="btn btn-secondary" onclick="testNotification()">Tes Notifikasi</button>
+  </div>
+</section>
+
+</div>
+
+<footer>YOGYA DAILY ASSISTANT • VERSION 2.0 • PRODUCTIVITY SYSTEM</footer>
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <button class="active" data-page="dashboard"><b>◫</b>Home</button>
+  <button data-page="tasks"><b>☑</b>Tasks</button>
+  <button data-page="promos"><b>◈</b>Promo</button>
+  <button data-page="notes"><b>▤</b>Notes</button>
+  <button data-page="prayer"><b>☾</b>Adzan</button>
+</nav>
+
+<script>
+// =====================================
+// STORAGE
+// =====================================
+
+const DB = {
+  tasks:"yogya_v2_tasks",
+  promos:"yogya_v2_promos",
+  notes:"yogya_v2_notes",
+  fired:"yogya_v2_fired"
+};
+
+const get = key => JSON.parse(localStorage.getItem(key)||"[]");
+const save = (key,value)=>localStorage.setItem(key,JSON.stringify(value));
+
+let tasks=get(DB.tasks);
+let promos=get(DB.promos);
+let notes=get(DB.notes);
+let fired=new Set(get(DB.fired));
+let prayers={};
+let lastPrayerDate="";
+let prayerError="";
+
+// =====================================
+// UTILITIES
+// =====================================
+
+const $=id=>document.getElementById(id);
+
+function localDate(d=new Date()){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function nowTime(){
+  return new Date().toTimeString().slice(0,5);
+}
+
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function dateLabel(date){
+  if(!date)return "-";
+  return new Date(date+"T12:00:00").toLocaleDateString("id-ID",{
+    day:"numeric",month:"short",year:"numeric"
+  });
+}
+
+function isLate(t){
+  return !t.done && (t.date<localDate() ||
+    (t.date===localDate() && t.time<=nowTime()));
+}
+
+// =====================================
+// NAVIGATION
+// =====================================
+
+const pageNames={
+  dashboard:"Dashboard Overview",
+  tasks:"Daily Task Management",
+  promos:"Promotion Reminder",
+  notes:"Quick Notes",
+  prayer:"Prayer Schedule"
+};
+
+function showPage(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  $("page-"+name).classList.remove("hidden");
+
+  document.querySelectorAll("[data-page]").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===name);
+  });
+
+  $("pageTitle").textContent=pageNames[name];
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll("[data-page]").forEach(b=>{
+  b.addEventListener("click",()=>showPage(b.dataset.page));
+});
+
+// =====================================
+// CLOCK
+// =====================================
+
+function updateClock(){
+  const d=new Date();
+
+  $("clock").textContent=d.toLocaleTimeString("id-ID",{hour12:false});
+
+  $("dateText").textContent=d.toLocaleDateString("id-ID",{
+    weekday:"long",day:"numeric",month:"long",year:"numeric"
+  });
+}
+
+setInterval(updateClock,1000);
+updateClock();
+
+// =====================================
+// NOTIFICATIONS
+// =====================================
+
+async function enableNotifications(){
+  if(!("Notification" in window)){
+    alert("Browser tidak mendukung notifikasi.");
+    return;
+  }
+
+  const permission=await Notification.requestPermission();
+
+  alert(permission==="granted"
+    ?"Notifikasi berhasil diaktifkan."
+    :"Izin notifikasi belum diberikan.");
+}
+
+function notify(title,message){
+  if(!("Notification" in window) ||
+     Notification.permission!=="granted")return;
+
+  try{
+    new Notification(title,{body:message,tag:title+message});
+  }catch(e){
+    console.log(e);
+  }
+}
+
+function testNotification(){
+  if(!("Notification" in window)){
+    alert("Browser tidak mendukung notifikasi.");
+    return;
+  }
+  if(Notification.permission!=="granted"){
+    enableNotifications();
+    return;
+  }
+  notify("YOGYA DAILY ASSISTANT","Notifikasi berhasil dijalankan!");
+}
+
+function sendOnce(key,title,message){
+  if(fired.has(key))return;
+
+  notify(title,message);
+  fired.add(key);
+
+  if(fired.size>500){
+    fired=new Set([...fired].slice(-300));
+  }
+
+  save(DB.fired,[...fired]);
+}
+
+// =====================================
+// PRAYER SCHEDULE - CIRANJANG
+// =====================================
+
+async function loadPrayer(){
+  const date=localDate().split("-").reverse().join("-");
+
+  $("prayerList").innerHTML="";
+  $("prayerDetail").innerHTML="";
+
+  try{
+    const url=`https://api.aladhan.com/v1/timingsByCity/${date}?city=Ciranjang&country=Indonesia&method=20`;
+
+    const response=await fetch(url);
+    if(!response.ok)throw new Error("Network error");
+
+    const result=await response.json();
+    if(result.code!==200)throw new Error("API error");
+
+    const t=result.data.timings;
+
+    prayers={
+      Subuh:t.Fajr,
+      Zuhur:t.Dhuhr,
+      Asar:t.Asr,
+      Magrib:t.Maghrib,
+      Isya:t.Isha
+    };
+
+    lastPrayerDate=localDate();
+    prayerError="";
+
+    $("prayerInfo").textContent=
+      "Lokasi: Ciranjang, Kabupaten Cianjur, Jawa Barat • Metode 20 (Kemenag RI). Cocokkan dengan jadwal masjid setempat.";
+
+    renderPrayer();
+
+  }catch(e){
+    prayerError="Jadwal gagal diambil. Periksa koneksi internet dan coba refresh.";
+    $("prayerInfo").textContent=prayerError;
+    $("nextPrayer").innerHTML=
+      "<small>JADWAL SALAT</small><strong>Tidak tersedia</strong><p>Silakan refresh jadwal.</p>";
+  }
+}
+
+function renderPrayer(){
+  const names=Object.entries(prayers);
+  const now=nowTime();
+
+  let next=names.find(([name,time])=>time>now);
+
+  if(next){
+    $("nextPrayer").innerHTML=`
+      <small>WAKTU SALAT BERIKUTNYA</small>
+      <strong>${next[0]} • ${next[1]}</strong>
+      <p>Waktu salat berikutnya di Ciranjang</p>`;
+  }else{
+    $("nextPrayer").innerHTML=`
+      <small>WAKTU SALAT BERIKUTNYA</small>
+      <strong>Besok Subuh</strong>
+      <p>Seluruh jadwal hari ini telah berlalu</p>`;
+  }
+
+  const html=names.map(([name,time])=>`
+    <div class="prayer-item ${next&&next[0]===name?"next":""}">
+      <span>${name}</span>
+      <strong>${time}</strong>
+    </div>`).join("");
+
+  $("prayerList").innerHTML=html;
+  $("prayerDetail").innerHTML=html;
+}
+
+// =====================================
+// TASK MANAGEMENT
+// =====================================
+
+$("taskForm").addEventListener("submit",e=>{
+  e.preventDefault();
+
+  tasks.push({
+    id:Date.now(),
+    name:$("taskName").value.trim(),
+    date:$("taskDate").value,
+    time:$("taskTime").value,
+    priority:$("taskPriority").value,
+    pic:$("taskPIC").value.trim(),
+    desc:$("taskDesc").value.trim(),
+    done:false
+  });
+
+  save(DB.tasks,tasks);
+  e.target.reset();
+  $("taskDate").value=localDate();
+  renderAll();
+});
+
+function finishTask(id){
+  tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);
+  save(DB.tasks,tasks);
+  renderAll();
+}
+
+function deleteTask(id){
+  if(!confirm("Hapus pekerjaan ini?"))return;
+  tasks=tasks.filter(t=>t.id!==id);
+  save(DB.tasks,tasks);
+  renderAll();
+}
+
+function taskHTML(t){
+  return `
+  <div class="item ${t.done?"completed":""}">
+    <div class="item-info">
+      <strong>${escapeHTML(t.name)}</strong>
+      <p>${dateLabel(t.date)} • ${t.time} • PIC: ${escapeHTML(t.pic||"-")}</p>
+      ${t.desc?`<p>${escapeHTML(t.desc)}</p>`:""}
+      <span class="tag ${t.done?"done":isLate(t)?"late":""}">
+        ${t.done?"SELESAI":isLate(t)?"TERLAMBAT":escapeHTML(t.priority.toUpperCase())}
+      </span>
+    </div>
+    <div class="item-actions">
+      <button class="btn btn-small" onclick="finishTask(${t.id})">${t.done?"Batal":"Selesai"}</button>
+      <button class="btn btn-danger btn-small" onclick="deleteTask(${t.id})">Hapus</button>
+    </div>
+  </div>`;
+}
+
+function renderTasks(){
+  const sorted=[...tasks].sort((a,b)=>
+    (a.date+a.time).localeCompare(b.date+b.time)
+  );
+
+  $("taskList").innerHTML=sorted.length
+    ?sorted.map(taskHTML).join("")
+    :'<div class="empty">Belum ada pekerjaan.</div>';
+
+  $("taskCount").textContent=tasks.length+" pekerjaan";
+
+  const pending=sorted.filter(t=>!t.done);
+
+  $("pendingList").innerHTML=pending.length
+    ?pending.map(taskHTML).join("")
+    :'<div class="empty">Semua pekerjaan selesai! 🎉</div>';
+
+  const today=localDate();
+  const todayTasks=tasks.filter(t=>t.date===today);
+  const todayDone=todayTasks.filter(t=>t.done).length;
+  const percent=todayTasks.length?
+    Math.round(todayDone/todayTasks.length*100):0;
+
+  $("progressPercent").textContent=percent+"%";
+  $("progressBar").style.width=percent+"%";
+
+  $("dashboardAgenda").innerHTML=todayTasks.length
+    ?todayTasks.sort((a,b)=>a.time.localeCompare(b.time)).map(taskHTML).join("")
+    :'<div class="empty">Tidak ada agenda hari ini.</div>';
+
+  $("dashboardPending").innerHTML=pending.length
+    ?pending.slice(0,4).map(taskHTML).join("")
+    :'<div class="empty">Tidak ada pekerjaan tertunda.</div>';
+
+  $("totalTask").textContent=tasks.length;
+  $("doneTask").textContent=tasks.filter(t=>t.done).length;
+  $("pendingTask").textContent=pending.length;
+  $("lateTask").textContent=pending.filter(isLate).length;
+}
+
+// =====================================
+// PROMO MANAGEMENT
+// =====================================
+
+$("promoForm").addEventListener("submit",e=>{
+  e.preventDefault();
+
+  promos.push({
+    id:Date.now(),
+    name:$("promoName").value.trim(),
+    date:$("promoDate").value,
+    time:$("promoTime").value,
+    desc:$("promoDesc").value.trim()
+  });
+
+  save(DB.promos,promos);
+  e.target.reset();
+  $("promoDate").value=localDate();
+  renderAll();
+});
+
+function deletePromo(id){
+  if(!confirm("Hapus jadwal promo?"))return;
+  promos=promos.filter(p=>p.id!==id);
+  save(DB.promos,promos);
+  renderAll();
+}
+
+function promoHTML(p){
+  return `
+  <div class="item">
+    <div class="item-info">
+      <strong>${escapeHTML(p.name)}</strong>
+      <p>${dateLabel(p.date)} • ${p.time}</p>
+      ${p.desc?`<p>${escapeHTML(p.desc)}</p>`:""}
+      <span class="tag">PROMOTION</span>
+    </div>
+    <button class="btn btn-danger btn-small" onclick="deletePromo(${p.id})">Hapus</button>
+  </div>`;
+}
+
+function renderPromos(){
+  const sorted=[...promos].sort((a,b)=>
+    (a.date+a.time).localeCompare(b.date+b.time)
+  );
+
+  $("promoList").innerHTML=sorted.length
+    ?sorted.map(promoHTML).join("")
+    :'<div class="empty">Belum ada jadwal promo.</div>';
+
+  $("dashboardPromo").innerHTML=sorted.filter(p=>
+    p.date>=localDate()
+  ).slice(0,4).map(promoHTML).join("")||
+    '<div class="empty">Belum ada promo mendatang.</div>';
+}
+
+// =====================================
+// NOTES
+// =====================================
+
+$("noteForm").addEventListener("submit",e=>{
+  e.preventDefault();
+
+  notes.unshift({
+    id:Date.now(),
+    title:$("noteTitle").value.trim(),
+    content:$("noteContent").value.trim(),
+    date:localDate()
+  });
+
+  save(DB.notes,notes);
+  e.target.reset();
+  renderAll();
+});
+
+function deleteNote(id){
+  if(!confirm("Hapus catatan?"))return;
+  notes=notes.filter(n=>n.id!==id);
+  save(DB.notes,notes);
+  renderAll();
+}
+
+function renderNotes(){
+  $("noteList").innerHTML=notes.length
+    ?notes.map(n=>`
+      <div class="item">
+        <div class="item-info">
+          <strong>${escapeHTML(n.title)}</strong>
+          <p>${escapeHTML(n.content)}</p>
+          <span class="tag">${dateLabel(n.date)}</span>
+        </div>
+        <button class="btn btn-danger btn-small" onclick="deleteNote(${n.id})">Hapus</button>
+      </div>`).join("")
+    :'<div class="empty">Belum ada catatan.</div>';
+}
+
+// =====================================
+// REMINDER ENGINE
+// =====================================
+
+function checkReminders(){
+  const date=localDate();
+  const time=nowTime();
+
+  // Adzan
+  Object.entries(prayers).forEach(([name,t])=>{
+    if(t===time){
+      sendOnce("prayer-"+date+"-"+name,
+        "Waktu Adzan "+name,
+        "Sudah masuk waktu salat "+name+" di Ciranjang.");
+    }
+  });
+
+  // Promo
+  promos.forEach(p=>{
+    if(p.date===date && p.time===time){
+      sendOnce("promo-"+p.id,
+        "Pengingat Promosi",
+        p.name+" - "+(p.desc||"Saatnya persiapan promosi."));
+    }
+  });
+
+  // Task
+  tasks.forEach(t=>{
+    if(!t.done && t.date===date && t.time===time){
+      sendOnce("task-"+t.id,
+        "Deadline Pekerjaan",
+        t.name+" harus diselesaikan sekarang.");
+    }
+  });
+}
+
+// =====================================
+// INIT
+// =====================================
+
+function renderAll(){
+  renderTasks();
+  renderPromos();
+  renderNotes();
+}
+
+$("taskDate").value=localDate();
+$("promoDate").value=localDate();
+
+renderAll();
+loadPrayer();
+
+let currentDate=localDate();
+
+setInterval(()=>{
+  if(localDate()!==currentDate){
+    currentDate=localDate();
+    loadPrayer();
+  }
+  checkReminders();
+  renderTasks();
+},5000);
+
+</script>
+</body>
+</html>
